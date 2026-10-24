@@ -1,0 +1,53 @@
+# Deployment + Service da API. Aplicar com: kubectl apply -f deploy/k8s/
+# Demonstração completa (kind + metrics-server + carga): bash scripts/k8s_demo.sh
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: diagnostico-api
+  labels: {app: diagnostico-api}
+spec:
+  replicas: 2
+  selector:
+    matchLabels: {app: diagnostico-api}
+  template:
+    metadata:
+      labels: {app: diagnostico-api}
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: /metrics
+    spec:
+      containers:
+        - name: api
+          image: diagnostico-api:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - {name: LLM_ENABLED, value: "0"}  # LLM fica no host (GPU); no cluster a API serve predição + SHAP
+            - {name: LLM_PROVIDER, value: ollama}
+            - {name: OLLAMA_URL, value: "http://host.docker.internal:11434"}
+            - {name: OLLAMA_MODEL, value: "qwen2.5:7b"}
+          # requests de CPU são a base do cálculo do HPA (utilização = uso / request)
+          resources:
+            requests: {cpu: 250m, memory: 512Mi}
+            limits: {cpu: "1", memory: 1Gi}
+          readinessProbe:
+            httpGet: {path: /health, port: 8080}
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          livenessProbe:
+            httpGet: {path: /health, port: 8080}
+            initialDelaySeconds: 30
+            periodSeconds: 15
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: diagnostico-api
+spec:
+  type: LoadBalancer
+  selector: {app: diagnostico-api}
+  ports:
+    - port: 8000
+      targetPort: 8080

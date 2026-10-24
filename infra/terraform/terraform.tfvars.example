@@ -1,0 +1,5 @@
+project_id      = "meu-projeto-tech-challenge"
+billing_account = "XXXXXX-XXXXXX-XXXXXX"
+region          = "us-central1"
+budget_amount   = 10 # na moeda da conta de faturamento (ex.: R$ 10)
+alert_email     = "seu-email@exemplo.com"

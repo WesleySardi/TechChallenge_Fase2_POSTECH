@@ -1,0 +1,17 @@
+model,experiment,best_fitness_mean,best_fitness_std,best_fitness_max,evaluations_mean,elapsed_seconds_mean,n_seeds,baseline_cv_fitness,random_search_fitness,random_search_evaluations
+decision_tree,E1_referencia,0.93442,0.00503,0.93918,131.33333,7.27704,3,0.89477,0.93248,131
+decision_tree,E2_populacao_grande,0.93731,0.00238,0.93967,299.66667,11.84692,3,0.89477,0.93248,131
+decision_tree,E3_mutacao_alta,0.93095,0.00353,0.93491,227.33333,9.01247,3,0.89477,0.93248,131
+decision_tree,E4_roleta_blend,0.93098,0.00447,0.93475,228.0,8.9202,3,0.89477,0.93248,131
+knn,E1_referencia,0.96301,0.0,0.96301,43.0,5.27881,3,0.95513,0.96008,43
+knn,E2_populacao_grande,0.96301,0.0,0.96301,69.0,5.41239,3,0.95513,0.96008,43
+knn,E3_mutacao_alta,0.96242,0.00104,0.96301,55.66667,5.87092,3,0.95513,0.96008,43
+knn,E4_roleta_blend,0.96242,0.00104,0.96301,58.66667,5.63847,3,0.95513,0.96008,43
+logistic_regression,E1_referencia,0.97677,1e-05,0.97678,96.66667,31.03483,3,0.96659,0.97627,96
+logistic_regression,E2_populacao_grande,0.97678,0.0,0.97679,213.33333,45.97542,3,0.96659,0.97627,96
+logistic_regression,E3_mutacao_alta,0.97678,1e-05,0.97679,178.66667,56.93127,3,0.96659,0.97627,96
+logistic_regression,E4_roleta_blend,0.97678,0.0,0.97678,229.66667,46.04081,3,0.96659,0.97627,96
+random_forest,E1_referencia,0.96498,0.00051,0.96527,126.66667,147.6603,3,0.95313,0.96299,126
+random_forest,E2_populacao_grande,0.96527,1e-05,0.96527,271.33333,199.65896,3,0.95313,0.96299,126
+random_forest,E3_mutacao_alta,0.96513,0.00029,0.96533,240.0,165.91321,3,0.95313,0.96299,126
+random_forest,E4_roleta_blend,0.96481,5e-05,0.96487,235.33333,156.28324,3,0.95313,0.96299,126

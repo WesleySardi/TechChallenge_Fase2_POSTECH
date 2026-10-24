@@ -1,0 +1,11 @@
+[project]
+name = "tech-challenge-fase2"
+version = "2.0.0"
+description = "Otimização de modelos de diagnóstico via algoritmo genético + interpretação com LLM"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+filterwarnings = [
+    "ignore::PendingDeprecationWarning:shap.*",
+]

@@ -1,0 +1,5 @@
+model,cv_accuracy_mean,cv_accuracy_std,test_accuracy,test_precision_malignant,test_recall_malignant,test_f1_malignant,test_roc_auc
+logistic_regression,0.9802,0.0128,0.9825,0.9762,0.9762,0.9762,0.9954
+decision_tree,0.9319,0.0213,0.9211,0.8667,0.9286,0.8966,0.9163
+knn,0.9714,0.0192,0.9737,1.0,0.9286,0.963,0.9884
+random_forest,0.9538,0.0235,0.9474,0.9286,0.9286,0.9286,0.9937

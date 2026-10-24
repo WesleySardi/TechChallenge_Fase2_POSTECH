@@ -1,0 +1,31 @@
+# Escalabilidade automática: o HPA ajusta o nº de réplicas (2 a 10) para manter a
+# CPU média em ~60% do request. Requer o metrics-server:
+#   kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+#   (Docker Desktop: adicione --kubelet-insecure-tls aos args do metrics-server)
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: diagnostico-api
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: diagnostico-api
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 60
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 0        # sobe rápido em pico de demanda
+      policies:
+        - {type: Percent, value: 100, periodSeconds: 15}
+    scaleDown:
+      stabilizationWindowSeconds: 120      # desce devagar para evitar oscilação
+      policies:
+        - {type: Pods, value: 1, periodSeconds: 30}

@@ -1,0 +1,9 @@
+llm,prompt_version,auto_score,label_consistent,prob_consistent,grounding_rate,factor_coverage,direction_accuracy,has_disclaimer,n_overconfident_terms,uncertainty_consistent,n_raw_field_names,n_ungrounded_numbers,flesch_pt,word_count,latency_s,judge_fidelidade,judge_clareza,judge_utilidade_clinica,judge_seguranca,judge_mean,judge_mean_norm
+llama3.1:8b,v1_zero_shot,0.731,1.0,1.0,1.0,0.975,,0.0,0.0,0.625,9.125,0.0,69.451,475.625,15.475,4.5,3.875,3.75,4.5,4.156,0.789
+llama3.1:8b,v2_estruturado,0.873,1.0,1.0,0.979,1.0,1.0,0.5,0.25,0.5,0.0,0.125,59.653,241.75,12.62,5.0,5.0,5.0,5.0,5.0,1.0
+llama3.1:8b,v3_few_shot,0.971,1.0,1.0,0.991,1.0,1.0,1.0,0.25,0.875,0.0,0.25,48.582,287.125,13.57,5.0,5.0,5.0,5.0,5.0,1.0
+llama3.1:8b,v4_calculos_no_codigo,0.972,1.0,1.0,1.0,1.0,1.0,1.0,0.25,0.875,0.0,0.0,50.052,294.625,13.19,5.0,5.0,5.0,5.0,5.0,1.0
+qwen2.5:7b,v1_zero_shot,0.828,1.0,1.0,1.0,1.0,,0.5,0.25,0.75,7.5,0.0,54.732,469.375,13.928,5.0,5.0,5.0,5.0,5.0,1.0
+qwen2.5:7b,v2_estruturado,0.984,1.0,1.0,0.983,1.0,1.0,1.0,0.125,1.0,0.0,0.25,45.123,319.25,13.012,5.0,5.0,5.0,5.0,5.0,1.0
+qwen2.5:7b,v3_few_shot,0.986,1.0,1.0,0.996,1.0,1.0,1.0,0.25,1.0,0.0,0.125,45.413,277.375,12.546,5.0,5.0,5.0,5.0,5.0,1.0
+qwen2.5:7b,v4_calculos_no_codigo,0.986,1.0,1.0,1.0,1.0,1.0,1.0,0.25,1.0,0.0,0.0,47.836,283.75,12.444,5.0,5.0,5.0,5.0,5.0,1.0

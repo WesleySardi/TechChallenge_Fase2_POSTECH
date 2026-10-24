@@ -1,0 +1,78 @@
+{
+  "logistic_regression": {
+    "experiment": "E2_populacao_grande",
+    "seed": 2024,
+    "cv_fitness": 0.9767867285397884,
+    "baseline_cv_fitness": 0.9665890676538605,
+    "params": {
+      "C": 0.3820136957594292,
+      "l1_ratio": 0.17579036742922952,
+      "class_weight": "balanced"
+    },
+    "baseline_params": {
+      "C": 1.0,
+      "l1_ratio": 0.0,
+      "class_weight": null
+    }
+  },
+  "decision_tree": {
+    "experiment": "E2_populacao_grande",
+    "seed": 7,
+    "cv_fitness": 0.9396678606524611,
+    "baseline_cv_fitness": 0.8947714857055697,
+    "params": {
+      "max_depth": 8,
+      "min_samples_split": 9,
+      "min_samples_leaf": 3,
+      "criterion": "gini",
+      "max_features": "log2",
+      "class_weight": "balanced"
+    },
+    "baseline_params": {
+      "max_depth": 5,
+      "min_samples_split": 2,
+      "min_samples_leaf": 1,
+      "criterion": "gini",
+      "max_features": null,
+      "class_weight": null
+    }
+  },
+  "knn": {
+    "experiment": "E1_referencia",
+    "seed": 42,
+    "cv_fitness": 0.9630130564524219,
+    "baseline_cv_fitness": 0.9551348548437947,
+    "params": {
+      "n_neighbors": 4,
+      "weights": "uniform",
+      "p": 1
+    },
+    "baseline_params": {
+      "n_neighbors": 7,
+      "weights": "uniform",
+      "p": 2
+    }
+  },
+  "random_forest": {
+    "experiment": "E3_mutacao_alta",
+    "seed": 42,
+    "cv_fitness": 0.9653280925191705,
+    "baseline_cv_fitness": 0.9531345482904998,
+    "params": {
+      "n_estimators": 343,
+      "max_depth": 6,
+      "min_samples_leaf": 1,
+      "max_features": "log2",
+      "criterion": "entropy",
+      "class_weight": "balanced"
+    },
+    "baseline_params": {
+      "n_estimators": 300,
+      "max_depth": 6,
+      "min_samples_leaf": 1,
+      "max_features": "sqrt",
+      "criterion": "gini",
+      "class_weight": null
+    }
+  }
+}

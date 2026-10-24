@@ -1,0 +1,2 @@
+test_accuracy,test_precision_malignant,test_recall_malignant,test_f1_malignant,test_roc_auc
+0.5639,0.4612,0.6667,0.5452,0.6149

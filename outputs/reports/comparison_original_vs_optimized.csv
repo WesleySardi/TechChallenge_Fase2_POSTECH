@@ -1,0 +1,9 @@
+model,version,cv_fitness,test_accuracy,test_precision_malignant,test_recall_malignant,test_f1_malignant,test_roc_auc,test_accuracy_ci_low,test_accuracy_ci_high,test_precision_malignant_ci_low,test_precision_malignant_ci_high,test_recall_malignant_ci_low,test_recall_malignant_ci_high,test_f1_malignant_ci_low,test_f1_malignant_ci_high,test_roc_auc_ci_low,test_roc_auc_ci_high
+logistic_regression,original,0.9666,0.9825,0.9762,0.9762,0.9762,0.9954,0.9561,1.0,0.923,1.0,0.9211,1.0,0.9383,1.0,0.9837,1.0
+logistic_regression,otimizado_ga,0.9768,0.9561,0.9111,0.9762,0.9425,0.9957,0.9211,0.9912,0.826,0.9835,0.9211,1.0,0.8863,0.9888,0.9858,1.0
+decision_tree,original,0.8948,0.9211,0.8667,0.9286,0.8966,0.9163,0.8684,0.9649,0.7608,0.9592,0.8437,1.0,0.8219,0.9589,0.8419,0.9776
+decision_tree,otimizado_ga,0.9397,0.9035,0.8444,0.9048,0.8736,0.9327,0.8509,0.9561,0.7391,0.9444,0.8108,0.9773,0.7941,0.9425,0.8753,0.9803
+knn,original,0.9551,0.9737,1.0,0.9286,0.963,0.9884,0.9474,1.0,1.0,1.0,0.8462,1.0,0.9167,1.0,0.9695,1.0
+knn,otimizado_ga,0.963,0.9561,0.9512,0.9286,0.9398,0.9807,0.9123,0.9912,0.878,1.0,0.8462,1.0,0.8809,0.9859,0.9487,0.9997
+random_forest,original,0.9531,0.9474,0.9286,0.9286,0.9286,0.9937,0.9035,0.9825,0.8378,1.0,0.8462,1.0,0.8642,0.9783,0.9828,1.0
+random_forest,otimizado_ga,0.9653,0.9386,0.907,0.9286,0.9176,0.994,0.8947,0.9825,0.8124,0.9792,0.8462,1.0,0.8506,0.9762,0.9836,1.0

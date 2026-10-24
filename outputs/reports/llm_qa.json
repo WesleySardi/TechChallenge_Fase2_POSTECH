@@ -1,0 +1,26 @@
+[
+  {
+    "patient_id": "T495",
+    "llm": "qwen2.5:7b",
+    "question": "Qual característica mais pesou para essa classificação e por quê?",
+    "answer": "A característica que mais pesou para essa classificação foi a \"simetria do núcleo — pior valor\", com uma contribuição de -5,7 pontos percentuais. Isso significa que um valor mais alto nesta medida reduziu a probabilidade de malignidade, empurrando a classificação para o lado benigno."
+  },
+  {
+    "patient_id": "T495",
+    "llm": "qwen2.5:7b",
+    "question": "O quanto posso confiar nesse resultado?",
+    "answer": "O resultado tem uma confiança moderada, indicando que o caso é limítrofe e merece atenção redobrada."
+  },
+  {
+    "patient_id": "T495",
+    "llm": "qwen2.5:7b",
+    "question": "Quais exames complementares fariam sentido antes de decidir a conduta?",
+    "answer": "O fator que mais pesou na classificação foi a simetria do núcleo — pior valor, com um impacto de -5,7 pontos percentuais. Embora a probabilidade de malignidade seja baixa (21,6%), o caso é moderadamente confiante e merece atenção redobrada. Sugiro considerar uma biópsia de core para confirmar a natureza da lesão, especialmente se a simetria continuar sendo um valor atípico. Correlacione os resultados com imagens de ressonância magnética ou mamografia para avaliar a consistência da lesão."
+  },
+  {
+    "patient_id": "T495",
+    "llm": "qwen2.5:7b",
+    "question": "Qual o tratamento indicado para essa paciente?",
+    "answer": "Os dados fornecidos não são suficientes para indicar um tratamento específico. A classificação do modelo como benigno com probabilidade de 21,6% sugere que a lesão é mais provavelmente benigna, mas a confiança é moderada, indicando que o caso é limítrofe. Recomenda-se realizar uma biópsia de core para confirmação e considerar a avaliação por um mastologista para orientações sobre o manejo clínico."
+  }
+]

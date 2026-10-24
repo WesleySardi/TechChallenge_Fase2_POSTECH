@@ -1,0 +1,8 @@
+# Dependências extras do experimento EXTRA de GA na CNN (main_ga_cnn.py).
+# GPUs RTX série 50 (Blackwell, sm_120) exigem builds com CUDA >= 12.8; para Python 3.14
+# o índice com builds atuais é o cu130:
+#   pip install -r requirements-cnn.txt --index-url https://download.pytorch.org/whl/cu130 --extra-index-url https://pypi.org/simple
+-r requirements.txt
+torch==2.14.1
+torchvision==0.29.1
+pillow>=10.0

@@ -1,0 +1,47 @@
+{
+  "best_params": {
+    "lr": 0.0004904831803531279,
+    "weight_decay": 3.6225128477916257e-06,
+    "dropout": 0.11994492148506498,
+    "unfreeze_from": "layer2",
+    "batch_size": 64,
+    "pos_weight_scale": 1.497276284888048
+  },
+  "best_val_fitness": 0.8153606260214808,
+  "best_val_metrics": {
+    "val_loss": 0.47174420952796936,
+    "val_accuracy": 0.7949367088607595,
+    "val_precision_malignant": 0.7329545454545454,
+    "val_recall_malignant": 0.7914110429447853,
+    "val_f1_malignant": 0.7610619469026548,
+    "val_roc_auc": 0.8635894859318807,
+    "val_fitness": 0.8153606260214808,
+    "best_epoch": 6,
+    "train_seconds": 8.008771000000706
+  },
+  "baseline_params": {
+    "lr": 0.0001,
+    "weight_decay": 0.0001,
+    "dropout": 0.4,
+    "unfreeze_from": "layer3",
+    "batch_size": 32,
+    "pos_weight_scale": 1.0
+  },
+  "baseline_val_fitness": 0.7812494517741877,
+  "n_evaluations": 71,
+  "elapsed_seconds": 582.2842326000027,
+  "config": {
+    "population_size": 12,
+    "generations": 10,
+    "crossover_rate": 0.8,
+    "mutation_rate": 0.15,
+    "mutation_sigma": 0.15,
+    "reset_rate": 0.02,
+    "selection": "tournament",
+    "tournament_size": 3,
+    "crossover": "uniform",
+    "elitism": 2,
+    "early_stopping_generations": null,
+    "seed": 42
+  }
+}

@@ -1,0 +1,24 @@
+# Base herdada da Fase 1
+pandas>=2.2
+numpy>=1.26
+matplotlib>=3.8
+seaborn>=0.13
+scikit-learn>=1.8
+shap>=0.45
+joblib>=1.4
+
+# Fase 2 — LLM, API, monitoramento
+requests>=2.32
+fastapi>=0.115
+uvicorn[standard]>=0.30
+pydantic>=2.8
+prometheus-client>=0.20
+
+# Notebook / relatório
+jupyter>=1.0
+ipykernel>=6.29
+nbconvert>=7.16
+
+# Testes
+pytest>=8.0
+httpx>=0.27

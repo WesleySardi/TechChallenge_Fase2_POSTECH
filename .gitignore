@@ -1,0 +1,23 @@
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.pytest_cache/
+*.egg-info/
+.DS_Store
+.env
+
+# Dataset CBIS-DDSM (~6 GB) — fica na pasta da Fase 1 ou em CBIS_DDSM_DIR
+data/archive/
+
+# Cache de imagens e pesos de CNN (grandes, regeneráveis)
+outputs/cache/
+outputs/models/*.pt
+
+# Logs de execução
+outputs/logs/
+
+# Terraform
+infra/terraform/.terraform/
+infra/terraform/*.tfstate*
+infra/terraform/terraform.tfvars

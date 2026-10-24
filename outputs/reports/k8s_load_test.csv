@@ -1,0 +1,4 @@
+estagio,concorrencia,duracao_s,req_s,erros,p50_ms,p95_ms
+inicio,4,30,227.5,0,16,29
+pico,32,240,502.3,0,61,109
+fim_10_replicas,4,30,699.6,0,5,9

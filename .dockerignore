@@ -1,0 +1,12 @@
+.venv/
+.git/
+**/__pycache__/
+.pytest_cache/
+notebooks/
+tests/
+outputs/figures/
+outputs/logs/
+outputs/models/*_original.joblib
+outputs/models/*.pt
+entrega/
+infra/

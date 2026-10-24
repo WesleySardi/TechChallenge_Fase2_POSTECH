@@ -1,0 +1,58 @@
+# Ambiente local completo: 3 réplicas da API atrás de um balanceador Nginx,
+# Prometheus coletando métricas de cada réplica e Grafana com dashboard pronto.
+#
+#   docker compose up --build              # sobe tudo
+#   docker compose up --scale api=5 -d     # escala manualmente para 5 réplicas
+#
+# API: http://localhost:8000/docs | Prometheus: http://localhost:9090 | Grafana: http://localhost:3000 (admin/admin)
+# A LLM roda no Ollama do host (fora do container, usando a GPU).
+
+services:
+  api:
+    build: .
+    image: diagnostico-api:latest
+    environment:
+      LLM_PROVIDER: ollama
+      OLLAMA_URL: http://host.docker.internal:11434
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-qwen2.5:7b}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    deploy:
+      replicas: 3
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 1g
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:1.27-alpine
+    ports:
+      - "8000:80"
+    volumes:
+      - ./deploy/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - api
+
+  prometheus:
+    image: prom/prometheus:v2.55.1
+    user: root  # leitura do docker.sock para descobrir as réplicas (apenas ambiente local)
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./deploy/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./deploy/prometheus/alerts.yml:/etc/prometheus/alerts.yml:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+  grafana:
+    image: grafana/grafana:11.3.0
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
+    volumes:
+      - ./deploy/grafana/provisioning:/etc/grafana/provisioning:ro
+    depends_on:
+      - prometheus

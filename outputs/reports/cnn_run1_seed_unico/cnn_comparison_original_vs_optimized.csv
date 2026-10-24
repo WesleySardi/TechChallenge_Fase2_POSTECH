@@ -1,0 +1,3 @@
+model,version,test_accuracy,test_precision_malignant,test_recall_malignant,test_f1_malignant,test_roc_auc,test_accuracy_ci_low,test_accuracy_ci_high,test_precision_malignant_ci_low,test_precision_malignant_ci_high,test_recall_malignant_ci_low,test_recall_malignant_ci_high,test_f1_malignant_ci_low,test_f1_malignant_ci_high,test_roc_auc_ci_low,test_roc_auc_ci_high,epochs_trained
+cnn_resnet18_transfer,original,0.6548,0.5583,0.5725,0.5653,0.721,0.6179,0.6903,0.4943,0.6138,0.5159,0.6324,0.5126,0.6149,0.6796,0.7568,10
+cnn_resnet18_transfer,otimizado_ga,0.6676,0.566,0.6522,0.6061,0.7354,0.6349,0.7031,0.511,0.6194,0.596,0.7071,0.5597,0.6482,0.6982,0.7714,9

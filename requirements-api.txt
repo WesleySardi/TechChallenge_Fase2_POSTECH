@@ -1,0 +1,13 @@
+# Dependências mínimas da imagem da API (sem notebook/plots/testes).
+# Versões fixadas: o modelo serializado com joblib precisa da MESMA versão do scikit-learn.
+pandas==3.0.6
+numpy==2.5.3
+scikit-learn==1.9.1
+scipy==1.18.1
+shap==0.52.0
+joblib==1.6.0
+requests==2.34.2
+fastapi==0.142.2
+uvicorn[standard]==0.54.0
+pydantic==2.13.5
+prometheus-client==0.26.0
