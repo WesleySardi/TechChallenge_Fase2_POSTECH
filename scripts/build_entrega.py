@@ -39,7 +39,7 @@ th { background: #eef3f8; }
 img { max-width: 100%; display: block; margin: 12px auto; page-break-inside: avoid; }
 code { background: #f3f3f3; padding: 1px 4px; border-radius: 3px; font-size: 9pt; }
 pre { background: #f6f8fa; border: 1px solid #e1e4e8; padding: 10px; border-radius: 5px; font-size: 8.3pt;
-      overflow-x: auto; page-break-inside: avoid; }
+      white-space: pre-wrap; word-break: break-word; }
 pre code { background: none; padding: 0; }
 blockquote { border-left: 4px solid #2c7fb8; margin: 10px 0; padding: 4px 12px; color: #333; background: #f8fbfd; }
 """

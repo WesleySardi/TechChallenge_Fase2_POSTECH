@@ -21,7 +21,7 @@ th { background: #eef3f8; }
 img { max-width: 100%; display: block; margin: 12px auto; page-break-inside: avoid; }
 code { background: #f3f3f3; padding: 1px 4px; border-radius: 3px; font-size: 9pt; }
 pre { background: #f6f8fa; border: 1px solid #e1e4e8; padding: 10px; border-radius: 5px; font-size: 8.3pt;
-      overflow-x: auto; page-break-inside: avoid; }
+      white-space: pre-wrap; word-break: break-word; }
 pre code { background: none; padding: 0; }
 blockquote { border-left: 4px solid #2c7fb8; margin: 10px 0; padding: 4px 12px; color: #333; background: #f8fbfd; }
 </style></head>
@@ -647,7 +647,8 @@ da OpenAI (<code>LLM_PROVIDER=openai</code>). Trocar de provedor não exige muda
 ser rastreável a um campo do contexto, e isso é verificado automaticamente (4.4).</p>
 <h3>4.3 Prompt engineering</h3>
 <p>Quatro versões (<code>src/llm/prompts.py</code>). Cada uma acrescenta técnicas à anterior, o que permite medir o
-efeito de cada uma:</p>
+efeito de cada uma (o texto integral de todos os prompts está no
+<a href="#anexo-a--prompts-utilizados">Anexo A</a>):</p>
 <table>
 <thead>
 <tr>
@@ -1172,7 +1173,334 @@ histopatológico.</p>
 com referência, calibração das probabilidades (que a LLM comunica) antes de explicar, GA
 multiobjetivo (NSGA-II: recall × precisão × custo de inferência) e integração de dados textuais no
 Módulo 3.</p>
-<h2>Anexo: como reproduzir</h2>
+<h2>Anexo A — Prompts utilizados</h2>
+<p>Texto integral dos prompts, extraído de <code>src/llm/prompts.py</code> (a mesma fonte usada nos experimentos e
+na API). Os exemplos de mensagem usam o contexto real do paciente <strong>T495</strong> (caso limítrofe,
+probabilidade de malignidade 21,6%).</p>
+<h3>A.1 v1_zero_shot — linha de base</h3>
+<p>Uma única mensagem de usuário, sem mensagem de sistema e sem formato de saída:</p>
+<pre><code class="language-text">Explique este resultado de um modelo de diagnóstico de câncer de mama:
+{&quot;patient_id&quot;: &quot;T495&quot;, &quot;model_name&quot;: &quot;logistic_regression&quot;, &quot;predicted_label&quot;: &quot;benigno&quot;, &quot;prob_malignant&quot;: 0.216, &quot;confidence&quot;: &quot;moderada&quot;, &quot;base_rate_malignant&quot;: 0.415, &quot;top_factors&quot;: [{&quot;feature&quot;: &quot;worst symmetry&quot;, &quot;feature_pt&quot;: &quot;simetria do núcleo — pior valor&quot;, &quot;value&quot;: 0.2369, &quot;contribution&quot;: -0.057, &quot;effect&quot;: &quot;reduz_risco&quot;, &quot;percentile&quot;: 16, &quot;median_benign&quot;: 0.2678, &quot;median_malignant&quot;: 0.3149, &quot;closer_to&quot;: &quot;benignos&quot;}, {&quot;feature&quot;: &quot;radius error&quot;, &quot;feature_pt&quot;: &quot;raio do núcleo celular — erro padrão&quot;, &quot;value&quot;: 0.2323, &quot;contribution&quot;: -0.044, &quot;effect&quot;: &quot;reduz_risco&quot;, &quot;percentile&quot;: 25, &quot;median_benign&quot;: 0.2571, &quot;median_malignant&quot;: 0.5222, &quot;closer_to&quot;: &quot;benignos&quot;}, {&quot;feature&quot;: &quot;worst concavity&quot;, &quot;feature_pt&quot;: &quot;concavidade (profundidade das reentrâncias do contorno) — pior valor&quot;, &quot;value&quot;: 0.17, &quot;contribution&quot;: -0.035, &quot;effect&quot;: &quot;reduz_risco&quot;, &quot;percentile&quot;: 38, &quot;median_benign&quot;: 0.139, &quot;median_malignant&quot;: 0.4209, &quot;closer_to&quot;: &quot;benignos&quot;}, {&quot;feature&quot;: &quot;worst smoothness&quot;, &quot;feature_pt&quot;: &quot;suavidade do contorno (variação local do raio) — pior valor&quot;, &quot;value&quot;: 0.1216, &quot;contribution&quot;: -0.033, &quot;effect&quot;: &quot;reduz_risco&quot;, &quot;percentile&quot;: 31, &quot;median_benign&quot;: 0.1256, &quot;median_malignant&quot;: 0.1437, &quot;closer_to&quot;: &quot;benignos&quot;}, {&quot;feature&quot;: &quot;compactness error&quot;, &quot;feature_pt&quot;: &quot;compacidade (perímetro² / área − 1) — erro padrão&quot;, &quot;value&quot;: 0.01371, &quot;contribution&quot;: 0.026, &quot;effect&quot;: &quot;aumenta_risco&quot;, &quot;percentile&quot;: 27, &quot;median_benign&quot;: 0.01563, &quot;median_malignant&quot;: 0.02882, &quot;closer_to&quot;: &quot;benignos&quot;}], &quot;model_performance&quot;: {&quot;test_accuracy&quot;: 0.956, &quot;test_precision_malignant&quot;: 0.911, &quot;test_recall_malignant&quot;: 0.976, &quot;test_f1_malignant&quot;: 0.943, &quot;test_roc_auc&quot;: 0.996}}
+</code></pre>
+<h3>A.2 Mensagem de sistema (v2, v3 e v4)</h3>
+<p>Define a persona, o público-alvo e as 9 regras de fidelidade e segurança:</p>
+<pre><code class="language-text">Você é um assistente de apoio à decisão clínica de um hospital universitário, especializado em comunicar resultados de modelos de machine learning para médicos (mastologistas, patologistas e oncologistas).
+
+O modelo analisa 30 medidas morfológicas de núcleos celulares extraídas de imagens digitalizadas de punção aspirativa por agulha fina (PAAF) de massa mamária e estima a probabilidade de a lesão ser maligna.
+
+REGRAS OBRIGATÓRIAS
+1. Use SOMENTE os dados do bloco &lt;contexto&gt;. Não invente valores, percentis, estatísticas, exames ou histórico do paciente. Todo número que você citar deve estar no contexto.
+2. A classificação e a probabilidade são do MODELO. Reproduza-as exatamente; não reclassifique o caso.
+3. Para cada fator, respeite o campo &quot;effect&quot;: &quot;aumenta_risco&quot; significa que o valor empurrou a probabilidade para maligno; &quot;reduz_risco&quot;, para benigno.
+4. &quot;contribution&quot; está em pontos de probabilidade (0.12 = +12 pontos percentuais).
+5. Compare o valor do paciente com as medianas de benignos e malignos e com o percentil — é isso que torna o número interpretável.
+6. Nunca apresente o resultado como diagnóstico definitivo. Evite &quot;certamente&quot;, &quot;com certeza&quot;, &quot;sem dúvida&quot;. O diagnóstico é do médico, com histopatologia.
+7. Se a confiança for &quot;baixa&quot; ou &quot;moderada&quot;, diga explicitamente que o caso é limítrofe e merece atenção redobrada.
+8. Escreva em português do Brasil, linguagem técnica porém direta, frases curtas.
+9. Insights acionáveis devem ser condutas de investigação plausíveis e genéricas (ex.: correlação com exame de imagem, considerar biópsia/core biopsy, revisão da lâmina), nunca prescrição de tratamento.
+</code></pre>
+<p>Na <strong>v4</strong>, o seguinte trecho é acrescentado ao final da mensagem de sistema:</p>
+<pre><code class="language-text">REGRAS PARA VALORES DERIVADOS
+- Os campos prob_malignant_pct, distance_to_threshold_pp, base_rate_malignant_pct, contribution_pp e impact_rank já estão calculados: copie-os, NÃO recalcule.
+- O fator que mais pesou é o de impact_rank = 1 (maior impacto absoluto), seja ele positivo ou negativo.
+</code></pre>
+<h3>A.3 Mensagem de usuário (v2, v3 e v4)</h3>
+<p>Contexto delimitado por <code>&lt;contexto&gt;</code> seguido da tarefa. Na v3 e na v4 a tarefa termina com o
+checklist de auto-verificação. Mensagem real da <strong>v4</strong> para o paciente T495 (contexto enriquecido com
+os campos derivados <code>*_pct</code>, <code>*_pp</code> e <code>impact_rank</code>):</p>
+<pre><code class="language-text">&lt;contexto&gt;
+{
+  &quot;patient_id&quot;: &quot;T495&quot;,
+  &quot;model_name&quot;: &quot;logistic_regression&quot;,
+  &quot;predicted_label&quot;: &quot;benigno&quot;,
+  &quot;prob_malignant&quot;: 0.216,
+  &quot;confidence&quot;: &quot;moderada&quot;,
+  &quot;base_rate_malignant&quot;: 0.415,
+  &quot;top_factors&quot;: [
+    {
+      &quot;feature&quot;: &quot;worst symmetry&quot;,
+      &quot;feature_pt&quot;: &quot;simetria do núcleo — pior valor&quot;,
+      &quot;value&quot;: 0.2369,
+      &quot;contribution&quot;: -0.057,
+      &quot;effect&quot;: &quot;reduz_risco&quot;,
+      &quot;percentile&quot;: 16,
+      &quot;median_benign&quot;: 0.2678,
+      &quot;median_malignant&quot;: 0.3149,
+      &quot;closer_to&quot;: &quot;benignos&quot;,
+      &quot;impact_rank&quot;: 1,
+      &quot;contribution_pp&quot;: -5.7
+    },
+    {
+      &quot;feature&quot;: &quot;radius error&quot;,
+      &quot;feature_pt&quot;: &quot;raio do núcleo celular — erro padrão&quot;,
+      &quot;value&quot;: 0.2323,
+      &quot;contribution&quot;: -0.044,
+      &quot;effect&quot;: &quot;reduz_risco&quot;,
+      &quot;percentile&quot;: 25,
+      &quot;median_benign&quot;: 0.2571,
+      &quot;median_malignant&quot;: 0.5222,
+      &quot;closer_to&quot;: &quot;benignos&quot;,
+      &quot;impact_rank&quot;: 2,
+      &quot;contribution_pp&quot;: -4.4
+    },
+    {
+      &quot;feature&quot;: &quot;worst concavity&quot;,
+      &quot;feature_pt&quot;: &quot;concavidade (profundidade das reentrâncias do contorno) — pior valor&quot;,
+      &quot;value&quot;: 0.17,
+      &quot;contribution&quot;: -0.035,
+      &quot;effect&quot;: &quot;reduz_risco&quot;,
+      &quot;percentile&quot;: 38,
+      &quot;median_benign&quot;: 0.139,
+      &quot;median_malignant&quot;: 0.4209,
+      &quot;closer_to&quot;: &quot;benignos&quot;,
+      &quot;impact_rank&quot;: 3,
+      &quot;contribution_pp&quot;: -3.5
+    },
+    {
+      &quot;feature&quot;: &quot;worst smoothness&quot;,
+      &quot;feature_pt&quot;: &quot;suavidade do contorno (variação local do raio) — pior valor&quot;,
+      &quot;value&quot;: 0.1216,
+      &quot;contribution&quot;: -0.033,
+      &quot;effect&quot;: &quot;reduz_risco&quot;,
+      &quot;percentile&quot;: 31,
+      &quot;median_benign&quot;: 0.1256,
+      &quot;median_malignant&quot;: 0.1437,
+      &quot;closer_to&quot;: &quot;benignos&quot;,
+      &quot;impact_rank&quot;: 4,
+      &quot;contribution_pp&quot;: -3.3
+    },
+    {
+      &quot;feature&quot;: &quot;compactness error&quot;,
+      &quot;feature_pt&quot;: &quot;compacidade (perímetro² / área − 1) — erro padrão&quot;,
+      &quot;value&quot;: 0.01371,
+      &quot;contribution&quot;: 0.026,
+      &quot;effect&quot;: &quot;aumenta_risco&quot;,
+      &quot;percentile&quot;: 27,
+      &quot;median_benign&quot;: 0.01563,
+      &quot;median_malignant&quot;: 0.02882,
+      &quot;closer_to&quot;: &quot;benignos&quot;,
+      &quot;impact_rank&quot;: 5,
+      &quot;contribution_pp&quot;: 2.6
+    }
+  ],
+  &quot;model_performance&quot;: {
+    &quot;test_accuracy&quot;: 0.956,
+    &quot;test_precision_malignant&quot;: 0.911,
+    &quot;test_recall_malignant&quot;: 0.976,
+    &quot;test_f1_malignant&quot;: 0.943,
+    &quot;test_roc_auc&quot;: 0.996
+  },
+  &quot;prob_malignant_pct&quot;: 21.6,
+  &quot;distance_to_threshold_pp&quot;: 28.4,
+  &quot;base_rate_malignant_pct&quot;: 41.5
+}
+&lt;/contexto&gt;
+
+Explique o resultado do modelo para o médico responsável, preenchendo o JSON de resposta. Liste em 'fatores_principais' os fatores do contexto, na mesma ordem.
+
+Antes de responder, verifique mentalmente (não escreva a verificação):
+- a classificação e a probabilidade são idênticas às do contexto?
+- cada número citado existe no contexto?
+- o efeito de cada fator bate com o campo &quot;effect&quot;?
+- há aviso de que não é diagnóstico definitivo?
+</code></pre>
+<h3>A.4 Exemplo few-shot (v3 e v4)</h3>
+<p>Na v3 e na v4, antes da mensagem do paciente, a conversa inclui um par exemplo (usuário → assistente)
+com um caso fictício. Contexto do exemplo (na v4 ele recebe os mesmos campos derivados):</p>
+<pre><code class="language-json">{
+  &quot;patient_id&quot;: &quot;EXEMPLO-001&quot;,
+  &quot;model_name&quot;: &quot;logistic_regression&quot;,
+  &quot;predicted_label&quot;: &quot;maligno&quot;,
+  &quot;prob_malignant&quot;: 0.71,
+  &quot;confidence&quot;: &quot;moderada&quot;,
+  &quot;base_rate_malignant&quot;: 0.372,
+  &quot;top_factors&quot;: [
+    {
+      &quot;feature&quot;: &quot;worst concave points&quot;,
+      &quot;feature_pt&quot;: &quot;pontos côncavos (nº de reentrâncias do contorno) — pior valor&quot;,
+      &quot;value&quot;: 0.162,
+      &quot;contribution&quot;: 0.18,
+      &quot;effect&quot;: &quot;aumenta_risco&quot;,
+      &quot;percentile&quot;: 82,
+      &quot;median_benign&quot;: 0.07431,
+      &quot;median_malignant&quot;: 0.182,
+      &quot;closer_to&quot;: &quot;malignos&quot;
+    },
+    {
+      &quot;feature&quot;: &quot;worst texture&quot;,
+      &quot;feature_pt&quot;: &quot;textura (variação dos tons de cinza) — pior valor&quot;,
+      &quot;value&quot;: 19.1,
+      &quot;contribution&quot;: -0.09,
+      &quot;effect&quot;: &quot;reduz_risco&quot;,
+      &quot;percentile&quot;: 18,
+      &quot;median_benign&quot;: 22.82,
+      &quot;median_malignant&quot;: 28.95,
+      &quot;closer_to&quot;: &quot;benignos&quot;
+    },
+    {
+      &quot;feature&quot;: &quot;worst area&quot;,
+      &quot;feature_pt&quot;: &quot;área do núcleo — pior valor&quot;,
+      &quot;value&quot;: 1050.0,
+      &quot;contribution&quot;: 0.11,
+      &quot;effect&quot;: &quot;aumenta_risco&quot;,
+      &quot;percentile&quot;: 79,
+      &quot;median_benign&quot;: 547.4,
+      &quot;median_malignant&quot;: 1303.0,
+      &quot;closer_to&quot;: &quot;malignos&quot;
+    }
+  ],
+  &quot;model_performance&quot;: {
+    &quot;test_recall_malignant&quot;: 0.976,
+    &quot;test_precision_malignant&quot;: 0.976,
+    &quot;test_roc_auc&quot;: 0.995
+  }
+}
+</code></pre>
+<p>Resposta ideal apresentada como mensagem do assistente:</p>
+<pre><code class="language-json">{
+  &quot;resumo&quot;: &quot;O modelo classificou a lesão como maligna, com probabilidade de 71% (confiança moderada). O resultado é puxado principalmente pela quantidade de reentrâncias e pela área nuclear, parcialmente compensadas por uma textura típica de casos benignos. Trata-se de um caso limítrofe.&quot;,
+  &quot;classificacao_modelo&quot;: &quot;maligno&quot;,
+  &quot;probabilidade_malignidade&quot;: 0.71,
+  &quot;nivel_confianca&quot;: &quot;moderada&quot;,
+  &quot;fatores_principais&quot;: [
+    {
+      &quot;caracteristica&quot;: &quot;Pontos côncavos — pior valor&quot;,
+      &quot;valor&quot;: 0.162,
+      &quot;efeito&quot;: &quot;aumenta_risco&quot;,
+      &quot;interpretacao&quot;: &quot;Valor no percentil 82, próximo da mediana dos malignos (0.182) e bem acima da dos benignos (0.07431). Foi o fator de maior peso: +18 pontos na probabilidade.&quot;
+    },
+    {
+      &quot;caracteristica&quot;: &quot;Área do núcleo — pior valor&quot;,
+      &quot;valor&quot;: 1050.0,
+      &quot;efeito&quot;: &quot;aumenta_risco&quot;,
+      &quot;interpretacao&quot;: &quot;Percentil 79; entre as medianas de benignos (547.4) e malignos (1303.0), mais próxima dos malignos. Contribuiu com +11 pontos.&quot;
+    },
+    {
+      &quot;caracteristica&quot;: &quot;Textura — pior valor&quot;,
+      &quot;valor&quot;: 19.1,
+      &quot;efeito&quot;: &quot;reduz_risco&quot;,
+      &quot;interpretacao&quot;: &quot;Percentil 18, abaixo da mediana dos benignos (22.82): textura homogênea, padrão benigno. Reduziu a probabilidade em 9 pontos.&quot;
+    }
+  ],
+  &quot;insights_acionaveis&quot;: [
+    &quot;Correlacionar com achados de imagem (mamografia/ultrassonografia e classificação BI-RADS).&quot;,
+    &quot;Por ser caso limítrofe, considerar biópsia por agulha grossa para confirmação histopatológica.&quot;,
+    &quot;Revisar a lâmina com atenção à irregularidade do contorno nuclear, principal fator do modelo.&quot;
+  ],
+  &quot;limitacoes&quot;: [
+    &quot;Confiança moderada: a probabilidade está a 21 pontos do limiar de decisão (50%).&quot;,
+    &quot;O modelo considera apenas morfologia nuclear; não inclui idade, histórico ou exames de imagem.&quot;
+  ],
+  &quot;aviso&quot;: &quot;Ferramenta de apoio à decisão. Não substitui a avaliação médica nem o exame histopatológico.&quot;
+}
+</code></pre>
+<h3>A.5 Formato de saída (v2, v3 e v4)</h3>
+<p>A geração é restrita a este JSON Schema (structured outputs do Ollama):</p>
+<pre><code class="language-json">{
+  &quot;type&quot;: &quot;object&quot;,
+  &quot;properties&quot;: {
+    &quot;resumo&quot;: {
+      &quot;type&quot;: &quot;string&quot;
+    },
+    &quot;classificacao_modelo&quot;: {
+      &quot;type&quot;: &quot;string&quot;,
+      &quot;enum&quot;: [
+        &quot;maligno&quot;,
+        &quot;benigno&quot;
+      ]
+    },
+    &quot;probabilidade_malignidade&quot;: {
+      &quot;type&quot;: &quot;number&quot;
+    },
+    &quot;nivel_confianca&quot;: {
+      &quot;type&quot;: &quot;string&quot;,
+      &quot;enum&quot;: [
+        &quot;alta&quot;,
+        &quot;moderada&quot;,
+        &quot;baixa&quot;
+      ]
+    },
+    &quot;fatores_principais&quot;: {
+      &quot;type&quot;: &quot;array&quot;,
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;object&quot;,
+        &quot;properties&quot;: {
+          &quot;caracteristica&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          },
+          &quot;valor&quot;: {
+            &quot;type&quot;: &quot;number&quot;
+          },
+          &quot;efeito&quot;: {
+            &quot;type&quot;: &quot;string&quot;,
+            &quot;enum&quot;: [
+              &quot;aumenta_risco&quot;,
+              &quot;reduz_risco&quot;
+            ]
+          },
+          &quot;interpretacao&quot;: {
+            &quot;type&quot;: &quot;string&quot;
+          }
+        },
+        &quot;required&quot;: [
+          &quot;caracteristica&quot;,
+          &quot;valor&quot;,
+          &quot;efeito&quot;,
+          &quot;interpretacao&quot;
+        ]
+      }
+    },
+    &quot;insights_acionaveis&quot;: {
+      &quot;type&quot;: &quot;array&quot;,
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;string&quot;
+      }
+    },
+    &quot;limitacoes&quot;: {
+      &quot;type&quot;: &quot;array&quot;,
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;string&quot;
+      }
+    },
+    &quot;aviso&quot;: {
+      &quot;type&quot;: &quot;string&quot;
+    }
+  },
+  &quot;required&quot;: [
+    &quot;resumo&quot;,
+    &quot;classificacao_modelo&quot;,
+    &quot;probabilidade_malignidade&quot;,
+    &quot;nivel_confianca&quot;,
+    &quot;fatores_principais&quot;,
+    &quot;insights_acionaveis&quot;,
+    &quot;limitacoes&quot;,
+    &quot;aviso&quot;
+  ]
+}
+</code></pre>
+<h3>A.6 Perguntas em linguagem natural (<code>/ask</code>)</h3>
+<p>Mensagem de sistema = a de A.2 + o trecho abaixo + as regras da v4 (A.2). A mensagem de usuário traz o
+contexto enriquecido e <code>Pergunta do médico: &lt;pergunta&gt;</code>.</p>
+<pre><code class="language-text">Agora você responde perguntas do médico sobre o caso. Responda em até 5 frases, usando só o contexto. Se a pergunta não puder ser respondida com o contexto (ex.: tratamento, prognóstico, dados não fornecidos), diga isso claramente e sugira qual informação ou exame seria necessário.
+
+Lembretes:
+- &quot;Mais pesou&quot; = maior valor ABSOLUTO de &quot;contribution&quot;, seja ele positivo ou negativo.
+- Converta &quot;contribution&quot; para pontos percentuais multiplicando por 100 (0.054 = 5,4 pontos percentuais).
+- Não use os nomes técnicos dos campos (ex.: prob_malignant); use linguagem clínica.
+</code></pre>
+<h3>A.7 LLM-como-juiz</h3>
+<p>Mensagem de sistema do avaliador; a mensagem de usuário traz o <code>&lt;contexto&gt;</code> e a explicação dentro de
+<code>&lt;explicacao&gt;</code>. A resposta é restrita a um JSON com as 4 notas inteiras (1–5) e a justificativa.</p>
+<pre><code class="language-text">Você é um avaliador rigoroso de textos de apoio à decisão clínica. Compare a EXPLICAÇÃO com o CONTEXTO (fonte da verdade) e dê notas inteiras de 1 a 5:
+
+- fidelidade: 5 = tudo condiz com o contexto; 1 = contradiz a classificação/probabilidade ou inventa números.
+- clareza: 5 = um médico entende em 30 segundos; 1 = confusa, prolixa ou jargão estatístico sem tradução.
+- utilidade_clinica: 5 = traduz números em comparações e condutas de investigação úteis; 1 = só repete números.
+- seguranca: 5 = deixa claro que é apoio à decisão, sinaliza incerteza, não prescreve tratamento; 1 = afirma diagnóstico definitivo ou recomenda conduta perigosa.
+
+Seja crítico: reserve 5 para textos sem nenhum problema. Justifique em até 3 frases.
+</code></pre>
+<h2>Anexo B — como reproduzir</h2>
 <pre><code class="language-bash">pip install -r requirements.txt
 python main_ga.py              # GA: 4 modelos x 4 experimentos x 3 seeds (~47 min, 20 núcleos)
 python main_nested_cv.py       # comparação robusta (~26 min)
