@@ -87,7 +87,7 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "sum(rate(api_requests_total{status=~\"5..\"}[5m])) / clamp_min(sum(rate(api_requests_total[5m])), 1e-9)",
+          "expr": "(sum(rate(api_requests_total{status=~\"5..\"}[5m])) or vector(0)) / clamp_min(sum(rate(api_requests_total[5m])), 1e-9)",
           "legendFormat": "erro",
           "datasource": {
             "type": "prometheus",
@@ -135,7 +135,7 @@
     {
       "id": 5,
       "type": "stat",
-      "title": "% casos limítrofes (1h)",
+      "title": "Casos limítrofes (total)",
       "datasource": {
         "type": "prometheus",
         "uid": "prometheus"
@@ -149,7 +149,7 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "sum(increase(model_low_confidence_total[1h])) / clamp_min(sum(increase(model_predictions_total[1h])), 1)",
+          "expr": "(sum(model_low_confidence_total) or vector(0)) / clamp_min(sum(model_predictions_total), 1)",
           "legendFormat": "limítrofes",
           "datasource": {
             "type": "prometheus",
@@ -162,7 +162,8 @@
           "unit": "percentunit"
         },
         "overrides": []
-      }
+      },
+      "description": "Proporção de predições com confiança baixa desde o início da API"
     },
     {
       "id": 6,
@@ -181,7 +182,7 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "sum(rate(llm_explanation_auto_score_sum[1h])) / clamp_min(sum(rate(llm_explanation_auto_score_count[1h])), 1e-9)",
+          "expr": "sum(llm_explanation_auto_score_sum) / sum(llm_explanation_auto_score_count)",
           "legendFormat": "nota",
           "datasource": {
             "type": "prometheus",
@@ -190,9 +191,14 @@
         }
       ],
       "fieldConfig": {
-        "defaults": {},
+        "defaults": {
+          "decimals": 2,
+          "min": 0,
+          "max": 1
+        },
         "overrides": []
-      }
+      },
+      "description": "Nota automática média (0–1) de todas as explicações servidas"
     },
     {
       "id": 7,
@@ -229,7 +235,7 @@
     {
       "id": 8,
       "type": "timeseries",
-      "title": "Latência p50 / p95 por endpoint",
+      "title": "Latência p95 por endpoint",
       "datasource": {
         "type": "prometheus",
         "uid": "prometheus"
@@ -243,17 +249,8 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "histogram_quantile(0.5, sum by (le, endpoint) (rate(api_request_latency_seconds_bucket[5m])))",
-          "legendFormat": "p50 {{endpoint}}",
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          }
-        },
-        {
-          "refId": "B",
           "expr": "histogram_quantile(0.95, sum by (le, endpoint) (rate(api_request_latency_seconds_bucket[5m])))",
-          "legendFormat": "p95 {{endpoint}}",
+          "legendFormat": "{{endpoint}}",
           "datasource": {
             "type": "prometheus",
             "uid": "prometheus"
@@ -269,8 +266,8 @@
     },
     {
       "id": 9,
-      "type": "timeseries",
-      "title": "Predições por classe",
+      "type": "bargauge",
+      "title": "Predições por classe (total)",
       "datasource": {
         "type": "prometheus",
         "uid": "prometheus"
@@ -278,13 +275,13 @@
       "gridPos": {
         "x": 0,
         "y": 13,
-        "w": 12,
+        "w": 8,
         "h": 8
       },
       "targets": [
         {
           "refId": "A",
-          "expr": "sum by (label) (rate(model_predictions_total[5m]))",
+          "expr": "sum by (label) (model_predictions_total)",
           "legendFormat": "{{label}}",
           "datasource": {
             "type": "prometheus",
@@ -294,30 +291,55 @@
       ],
       "fieldConfig": {
         "defaults": {
-          "unit": "ops"
+          "color": {
+            "mode": "palette-classic"
+          }
         },
         "overrides": []
+      },
+      "options": {
+        "displayMode": "basic",
+        "orientation": "horizontal",
+        "showUnfilled": true
       }
     },
     {
       "id": 10,
-      "type": "heatmap",
-      "title": "Distribuição da probabilidade de malignidade (drift)",
+      "type": "timeseries",
+      "title": "Drift: perfil das predições (janela de 15 min)",
       "datasource": {
         "type": "prometheus",
         "uid": "prometheus"
       },
       "gridPos": {
-        "x": 12,
+        "x": 8,
         "y": 13,
-        "w": 12,
+        "w": 16,
         "h": 8
       },
       "targets": [
         {
           "refId": "A",
-          "expr": "sum by (le) (increase(model_prediction_probability_malignant_bucket[10m]))",
-          "legendFormat": "{{le}}",
+          "expr": "sum(increase(model_prediction_probability_malignant_sum[15m])) / sum(increase(model_prediction_probability_malignant_count[15m]))",
+          "legendFormat": "probabilidade média de malignidade",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
+        },
+        {
+          "refId": "B",
+          "expr": "sum(increase(model_predictions_total{label=\"maligno\"}[15m])) / sum(increase(model_predictions_total[15m]))",
+          "legendFormat": "proporção classificada como maligna",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
+        },
+        {
+          "refId": "C",
+          "expr": "vector(0.37)",
+          "legendFormat": "referência: proporção de malignos na base (37%)",
           "datasource": {
             "type": "prometheus",
             "uid": "prometheus"
@@ -325,14 +347,19 @@
         }
       ],
       "fieldConfig": {
-        "defaults": {},
+        "defaults": {
+          "unit": "percentunit",
+          "min": 0,
+          "max": 1
+        },
         "overrides": []
-      }
+      },
+      "description": "Se as linhas se afastarem da referência por muito tempo, a população de entrada mudou (drift)"
     },
     {
       "id": 11,
-      "type": "timeseries",
-      "title": "Latência da LLM p95",
+      "type": "stat",
+      "title": "Latência da LLM p95 (total)",
       "datasource": {
         "type": "prometheus",
         "uid": "prometheus"
@@ -341,12 +368,12 @@
         "x": 0,
         "y": 21,
         "w": 12,
-        "h": 8
+        "h": 7
       },
       "targets": [
         {
           "refId": "A",
-          "expr": "histogram_quantile(0.95, sum by (le, llm, kind) (rate(llm_latency_seconds_bucket[10m])))",
+          "expr": "histogram_quantile(0.95, sum by (le, llm, kind) (llm_latency_seconds_bucket))",
           "legendFormat": "{{llm}} {{kind}}",
           "datasource": {
             "type": "prometheus",
@@ -363,8 +390,8 @@
     },
     {
       "id": 12,
-      "type": "timeseries",
-      "title": "Erros da LLM",
+      "type": "stat",
+      "title": "Erros da LLM (total)",
       "datasource": {
         "type": "prometheus",
         "uid": "prometheus"
@@ -373,13 +400,13 @@
         "x": 12,
         "y": 21,
         "w": 12,
-        "h": 8
+        "h": 7
       },
       "targets": [
         {
           "refId": "A",
-          "expr": "sum by (llm) (increase(llm_errors_total[10m]))",
-          "legendFormat": "{{llm}}",
+          "expr": "sum(llm_errors_total) or vector(0)",
+          "legendFormat": "erros",
           "datasource": {
             "type": "prometheus",
             "uid": "prometheus"

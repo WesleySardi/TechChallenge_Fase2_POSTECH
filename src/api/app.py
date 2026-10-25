@@ -62,6 +62,10 @@ app = FastAPI(
 @app.middleware("http")
 async def observe_requests(request: Request, call_next):
     endpoint = request.url.path
+    # A coleta do Prometheus não entra nas métricas: senão cada scrape aparece como
+    # "requisição em andamento" no momento em que ele próprio lê o valor.
+    if endpoint == "/metrics":
+        return await call_next(request)
     metrics.IN_PROGRESS.inc()
     start = time.perf_counter()
     status = 500
@@ -72,12 +76,11 @@ async def observe_requests(request: Request, call_next):
     finally:
         elapsed = time.perf_counter() - start
         metrics.IN_PROGRESS.dec()
-        if endpoint != "/metrics":
-            metrics.REQUESTS.labels(request.method, endpoint, str(status)).inc()
-            metrics.REQUEST_LATENCY.labels(endpoint).observe(elapsed)
-            logger.info(f"{request.method} {endpoint} {status} {elapsed * 1000:.0f}ms",
-                        extra={"event": "http_request", "method": request.method, "endpoint": endpoint,
-                               "status": status, "latency_ms": round(elapsed * 1000, 1)})
+        metrics.REQUESTS.labels(request.method, endpoint, str(status)).inc()
+        metrics.REQUEST_LATENCY.labels(endpoint).observe(elapsed)
+        logger.info(f"{request.method} {endpoint} {status} {elapsed * 1000:.0f}ms",
+                    extra={"event": "http_request", "method": request.method, "endpoint": endpoint,
+                           "status": status, "latency_ms": round(elapsed * 1000, 1)})
 
 
 def _to_frame(patients: list[PatientFeatures], feature_names: list[str]) -> pd.DataFrame:
