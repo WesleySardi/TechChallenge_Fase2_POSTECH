@@ -597,7 +597,7 @@ orçamento com alertas protege contra esquecimentos. As cotas e preços devem se
 https://cloud.google.com/run/pricing no momento do deploy, porque mudam com o tempo.
 
 *Status:* a IaC está completa e validada estruturalmente, mas **não foi aplicada** porque depende
-de uma conta GCP com faturamento ativo, que o autor ainda vai criar. A mesma imagem Docker já foi
+de uma conta GCP com faturamento ativo, que ainda não criei. A mesma imagem Docker já foi
 testada localmente (container com `LLM_ENABLED=0`, o modo usado na nuvem: `/predict` e `/explain`
 sem LLM funcionando, `/explain` com LLM respondendo 503) e escalada no Kubernetes. O passo a passo
 está no README, seção 6.

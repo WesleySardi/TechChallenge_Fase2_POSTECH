@@ -1,6 +1,6 @@
 # Tech Challenge — Fase 2
 
-**Autor:** Wesley Sardi
+**Autor:** Wesley Sardi (entrega individual)
 
 Otimização dos modelos de diagnóstico de câncer de mama da [Fase 1](https://github.com/WesleySardi/TechChallenge_Fase1_POSTECH)
 com **algoritmos genéticos** e interpretação dos resultados com **LLMs** (Projeto 1 do Tech Challenge):
