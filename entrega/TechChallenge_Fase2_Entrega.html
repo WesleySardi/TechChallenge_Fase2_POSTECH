@@ -67,6 +67,199 @@ mamografias. Nesta fase:</p>
                      └───────────────────────────────────────────────────────────────┘
 </code></pre>
 <p>O diagrama detalhado (Mermaid) está no <a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/README.md#arquitetura">README</a>.</p>
+<h3>1.1 Mapa dos requisitos</h3>
+<p>Onde cada item do enunciado (Projeto 1) foi implementado no repositório
+(https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH) e em qual seção deste relatório ele é discutido.</p>
+<p><strong>1. Otimização via algoritmos genéticos</strong></p>
+<table>
+<thead>
+<tr>
+<th>O que o PDF pede</th>
+<th>Onde está no código</th>
+<th>Relatório</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Algoritmo genético para os hiperparâmetros dos modelos do Módulo 1</td>
+<td><a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/src/ga/engine.py"><code>src/ga/engine.py</code></a>, <a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/src/ga/search_spaces.py"><code>src/ga/search_spaces.py</code></a></td>
+<td>§2</td>
+</tr>
+<tr>
+<td>Codificação dos hiperparâmetros (representação dos genes)</td>
+<td><a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/src/ga/genes.py"><code>src/ga/genes.py</code></a></td>
+<td>§2.1</td>
+</tr>
+<tr>
+<td>Operadores de seleção, cruzamento e mutação</td>
+<td><a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/src/ga/operators.py"><code>src/ga/operators.py</code></a></td>
+<td>§2.2</td>
+</tr>
+<tr>
+<td>Função fitness baseada em métricas (accuracy, recall, F1...)</td>
+<td><a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/src/ga/fitness.py"><code>src/ga/fitness.py</code></a></td>
+<td>§2.3</td>
+</tr>
+<tr>
+<td>Comparar modelos otimizados com os originais</td>
+<td><a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/src/optimization.py"><code>src/optimization.py</code></a>, <a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/main_nested_cv.py"><code>main_nested_cv.py</code></a></td>
+<td>§3.2, §3.3</td>
+</tr>
+<tr>
+<td>Pelo menos 3 experimentos com configurações diferentes do GA</td>
+<td><a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/src/optimization.py"><code>src/optimization.py</code></a>, <a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/main_ga.py"><code>main_ga.py</code></a></td>
+<td>§2.4, §3.1</td>
+</tr>
+<tr>
+<td>(extra) GA na CNN de imagens</td>
+<td><a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/src/cnn_ga.py"><code>src/cnn_ga.py</code></a>, <a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/main_ga_cnn.py"><code>main_ga_cnn.py</code></a></td>
+<td>§3.4</td>
+</tr>
+</tbody>
+</table>
+<p><strong>2. Escalabilidade automática, monitoramento e logging</strong></p>
+<table>
+<thead>
+<tr>
+<th>O que o PDF pede</th>
+<th>Onde está no código</th>
+<th>Relatório</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Escalabilidade automática para variações de demanda</td>
+<td><a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/deploy/k8s/hpa.yaml"><code>deploy/k8s/hpa.yaml</code></a>, <a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/docker-compose.yml"><code>docker-compose.yml</code></a>, <a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/scripts/k8s_demo.sh"><code>scripts/k8s_demo.sh</code></a></td>
+<td>§6.3</td>
+</tr>
+<tr>
+<td>Monitoramento e logging para tracking de desempenho</td>
+<td><a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/src/api/metrics.py"><code>src/api/metrics.py</code></a>, <a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/src/monitoring/logging_config.py"><code>src/monitoring/logging_config.py</code></a>, <a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/deploy/prometheus/"><code>deploy/prometheus/</code></a>, <a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/deploy/grafana/"><code>deploy/grafana/</code></a></td>
+<td>§6.2</td>
+</tr>
+<tr>
+<td>Documentar arquitetura e decisões de implementação</td>
+<td><a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/README.md#arquitetura"><code>README.md</code></a></td>
+<td>§6.3, §9</td>
+</tr>
+<tr>
+<td>(opcional) Implementação em nuvem — planejada e codificada, não implantada</td>
+<td><a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/infra/terraform/"><code>infra/terraform/</code></a>, <a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/scripts/deploy_gcp.sh"><code>scripts/deploy_gcp.sh</code></a></td>
+<td>§7</td>
+</tr>
+</tbody>
+</table>
+<p><strong>3. Integração com LLMs</strong></p>
+<table>
+<thead>
+<tr>
+<th>O que o PDF pede</th>
+<th>Onde está no código</th>
+<th>Relatório</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Integrar uma LLM pré-treinada</td>
+<td><a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/src/llm/client.py"><code>src/llm/client.py</code></a></td>
+<td>§4.1</td>
+</tr>
+<tr>
+<td>Explicações em linguagem natural dos diagnósticos</td>
+<td><a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/src/llm/explainer.py"><code>src/llm/explainer.py</code></a>, <a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/src/api/app.py"><code>src/api/app.py</code></a> (POST /explain)</td>
+<td>§4.4</td>
+</tr>
+<tr>
+<td>Transformar dados numéricos em insights acionáveis</td>
+<td><a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/src/llm/context.py"><code>src/llm/context.py</code></a></td>
+<td>§4.2</td>
+</tr>
+<tr>
+<td>Base para dados textuais no Módulo 3</td>
+<td><a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/src/llm/context.py"><code>src/llm/context.py</code></a> (clinical_notes), <a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/src/api/app.py"><code>src/api/app.py</code></a> (POST /ask)</td>
+<td>§5</td>
+</tr>
+<tr>
+<td>Prompt engineering para o contexto médico</td>
+<td><a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/src/llm/prompts.py"><code>src/llm/prompts.py</code></a></td>
+<td>§4.3, Anexo A</td>
+</tr>
+<tr>
+<td>Avaliar a qualidade das interpretações</td>
+<td><a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/src/llm/quality.py"><code>src/llm/quality.py</code></a>, <a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/main_llm.py"><code>main_llm.py</code></a></td>
+<td>§4.4</td>
+</tr>
+</tbody>
+</table>
+<p><strong>4. Código e organização</strong></p>
+<table>
+<thead>
+<tr>
+<th>O que o PDF pede</th>
+<th>Onde está no código</th>
+<th>Relatório</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Projeto Python estruturado com ambiente virtual (venv)</td>
+<td><a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/requirements.txt"><code>requirements.txt</code></a>, <a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/README.md#como-executar"><code>README.md</code></a></td>
+<td>—</td>
+</tr>
+<tr>
+<td>Documentação detalhada com diagramas de arquitetura</td>
+<td><a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/README.md#arquitetura"><code>README.md</code></a></td>
+<td>§1</td>
+</tr>
+<tr>
+<td>Testes automatizados</td>
+<td><a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/tests/"><code>tests/</code></a></td>
+<td>§8</td>
+</tr>
+<tr>
+<td>Infraestrutura como código (se em nuvem)</td>
+<td><a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/infra/terraform/"><code>infra/terraform/</code></a></td>
+<td>§7</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Entregáveis</strong></p>
+<table>
+<thead>
+<tr>
+<th>O que o PDF pede</th>
+<th>Onde está no código</th>
+<th>Relatório</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Repositório Git com o código-fonte completo</td>
+<td><a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/README.md#estrutura-do-projeto"><code>README.md</code></a></td>
+<td>—</td>
+</tr>
+<tr>
+<td>Documentação da API</td>
+<td><a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/src/api/schemas.py"><code>src/api/schemas.py</code></a>, <a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/README.md#como-executar"><code>README.md</code></a> (endpoints e /docs)</td>
+<td>§6.1</td>
+</tr>
+<tr>
+<td>Scripts ou notebooks de demonstração</td>
+<td><a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/notebooks/demo_fase2.ipynb"><code>notebooks/demo_fase2.ipynb</code></a>, <a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/main_ga.py"><code>main_ga.py</code></a>, <a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/main_llm.py"><code>main_llm.py</code></a></td>
+<td>—</td>
+</tr>
+<tr>
+<td>Arquivos de configuração para implantação</td>
+<td><a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/Dockerfile"><code>Dockerfile</code></a>, <a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/docker-compose.yml"><code>docker-compose.yml</code></a>, <a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/deploy/"><code>deploy/</code></a>, <a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/infra/terraform/"><code>infra/terraform/</code></a></td>
+<td>—</td>
+</tr>
+<tr>
+<td>Relatório técnico (GA, LLM e prompts, comparativo, desafios, arquitetura de nuvem)</td>
+<td><a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/RELATORIO_TECNICO.md"><code>RELATORIO_TECNICO.md</code></a>, <a href="https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH/blob/main/entrega/TechChallenge_Fase2_Entrega.pdf"><code>entrega/TechChallenge_Fase2_Entrega.pdf</code></a></td>
+<td>§2, §3, §4, §9, §7</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2>2. Algoritmo genético</h2>
 <h3>2.1 Codificação (representação dos genes)</h3>

@@ -53,6 +53,63 @@ sem nenhum erro (502 req/s no pico).
 Tabelas completas em [`outputs/reports/`](outputs/reports/); todas as figuras em
 [`outputs/figures/`](outputs/figures/).
 
+## Onde encontrar cada requisito do Tech Challenge
+
+Mapa entre os itens do enunciado (Projeto 1) e a implementação. Os links de código abrem o arquivo;
+os de relatório abrem a seção correspondente do [Relatório Técnico](RELATORIO_TECNICO.md).
+
+**1. Otimização via algoritmos genéticos**
+
+| O que o PDF pede | Onde está no código | Relatório |
+|---|---|---|
+| Algoritmo genético para os hiperparâmetros dos modelos do Módulo 1 | [`src/ga/engine.py`](src/ga/engine.py), [`src/ga/search_spaces.py`](src/ga/search_spaces.py) | [§2](RELATORIO_TECNICO.md#2-algoritmo-genético) |
+| Codificação dos hiperparâmetros (representação dos genes) | [`src/ga/genes.py`](src/ga/genes.py) | [§2.1](RELATORIO_TECNICO.md#21-codificação-representação-dos-genes) |
+| Operadores de seleção, cruzamento e mutação | [`src/ga/operators.py`](src/ga/operators.py) | [§2.2](RELATORIO_TECNICO.md#22-operadores) |
+| Função fitness baseada em métricas (accuracy, recall, F1...) | [`src/ga/fitness.py`](src/ga/fitness.py) | [§2.3](RELATORIO_TECNICO.md#23-função-fitness) |
+| Comparar modelos otimizados com os originais | [`src/optimization.py`](src/optimization.py), [`main_nested_cv.py`](main_nested_cv.py) | [§3.2](RELATORIO_TECNICO.md#32-comparação-no-conjunto-de-teste-114-pacientes), [§3.3](RELATORIO_TECNICO.md#33-comparação-robusta-validação-cruzada-aninhada) |
+| Pelo menos 3 experimentos com configurações diferentes do GA | [`src/optimization.py`](src/optimization.py), [`main_ga.py`](main_ga.py) | [§2.4](RELATORIO_TECNICO.md#24-experimentos), [§3.1](RELATORIO_TECNICO.md#31-fitness-em-validação-cruzada-treino) |
+| (extra) GA na CNN de imagens | [`src/cnn_ga.py`](src/cnn_ga.py), [`main_ga_cnn.py`](main_ga_cnn.py) | [§3.4](RELATORIO_TECNICO.md#34-extra-ga-na-cnn-resnet18-transfer-learning) |
+
+**2. Escalabilidade automática, monitoramento e logging**
+
+| O que o PDF pede | Onde está no código | Relatório |
+|---|---|---|
+| Escalabilidade automática para variações de demanda | [`deploy/k8s/hpa.yaml`](deploy/k8s/hpa.yaml), [`docker-compose.yml`](docker-compose.yml), [`scripts/k8s_demo.sh`](scripts/k8s_demo.sh) | [§6.3](RELATORIO_TECNICO.md#63-escalabilidade-automática) |
+| Monitoramento e logging para tracking de desempenho | [`src/api/metrics.py`](src/api/metrics.py), [`src/monitoring/logging_config.py`](src/monitoring/logging_config.py), [`deploy/prometheus/`](deploy/prometheus/), [`deploy/grafana/`](deploy/grafana/) | [§6.2](RELATORIO_TECNICO.md#62-monitoramento-e-logging) |
+| Documentar arquitetura e decisões de implementação | [`README.md`](README.md#arquitetura) | [§6.3](RELATORIO_TECNICO.md#63-escalabilidade-automática), [§9](RELATORIO_TECNICO.md#9-desafios-enfrentados-e-soluções) |
+| (opcional) Implementação em nuvem — planejada e codificada, não implantada | [`infra/terraform/`](infra/terraform/), [`scripts/deploy_gcp.sh`](scripts/deploy_gcp.sh) | [§7](RELATORIO_TECNICO.md#7-implementação-em-nuvem-bônus-google-cloud-run--terraform) |
+
+**3. Integração com LLMs**
+
+| O que o PDF pede | Onde está no código | Relatório |
+|---|---|---|
+| Integrar uma LLM pré-treinada | [`src/llm/client.py`](src/llm/client.py) | [§4.1](RELATORIO_TECNICO.md#41-escolha-do-modelo) |
+| Explicações em linguagem natural dos diagnósticos | [`src/llm/explainer.py`](src/llm/explainer.py), [`src/api/app.py`](src/api/app.py) (POST /explain) | [§4.4](RELATORIO_TECNICO.md#44-avaliação-da-qualidade-das-interpretações) |
+| Transformar dados numéricos em insights acionáveis | [`src/llm/context.py`](src/llm/context.py) | [§4.2](RELATORIO_TECNICO.md#42-do-número-ao-insight-o-contexto-do-caso) |
+| Base para dados textuais no Módulo 3 | [`src/llm/context.py`](src/llm/context.py) (clinical_notes), [`src/api/app.py`](src/api/app.py) (POST /ask) | [§5](RELATORIO_TECNICO.md#5-base-para-o-módulo-3) |
+| Prompt engineering para o contexto médico | [`src/llm/prompts.py`](src/llm/prompts.py) | [§4.3](RELATORIO_TECNICO.md#43-prompt-engineering), [Anexo A](RELATORIO_TECNICO.md#anexo-a--prompts-utilizados) |
+| Avaliar a qualidade das interpretações | [`src/llm/quality.py`](src/llm/quality.py), [`main_llm.py`](main_llm.py) | [§4.4](RELATORIO_TECNICO.md#44-avaliação-da-qualidade-das-interpretações) |
+
+**4. Código e organização**
+
+| O que o PDF pede | Onde está no código | Relatório |
+|---|---|---|
+| Projeto Python estruturado com ambiente virtual (venv) | [`requirements.txt`](requirements.txt), [`README.md`](README.md#como-executar) | — |
+| Documentação detalhada com diagramas de arquitetura | [`README.md`](README.md#arquitetura) | [§1](RELATORIO_TECNICO.md#1-objetivo-e-visão-geral) |
+| Testes automatizados | [`tests/`](tests/) | [§8](RELATORIO_TECNICO.md#8-testes-automatizados) |
+| Infraestrutura como código (se em nuvem) | [`infra/terraform/`](infra/terraform/) | [§7](RELATORIO_TECNICO.md#7-implementação-em-nuvem-bônus-google-cloud-run--terraform) |
+
+**Entregáveis**
+
+| O que o PDF pede | Onde está no código | Relatório |
+|---|---|---|
+| Repositório Git com o código-fonte completo | [`README.md`](README.md#estrutura-do-projeto) | — |
+| Documentação da API | [`src/api/schemas.py`](src/api/schemas.py), [`README.md`](README.md#como-executar) (endpoints e /docs) | [§6.1](RELATORIO_TECNICO.md#61-api) |
+| Scripts ou notebooks de demonstração | [`notebooks/demo_fase2.ipynb`](notebooks/demo_fase2.ipynb), [`main_ga.py`](main_ga.py), [`main_llm.py`](main_llm.py) | — |
+| Arquivos de configuração para implantação | [`Dockerfile`](Dockerfile), [`docker-compose.yml`](docker-compose.yml), [`deploy/`](deploy/), [`infra/terraform/`](infra/terraform/) | — |
+| Relatório técnico (GA, LLM e prompts, comparativo, desafios, arquitetura de nuvem) | [`RELATORIO_TECNICO.md`](RELATORIO_TECNICO.md), [`entrega/TechChallenge_Fase2_Entrega.pdf`](entrega/TechChallenge_Fase2_Entrega.pdf) | [§2](RELATORIO_TECNICO.md#2-algoritmo-genético), [§3](RELATORIO_TECNICO.md#3-resultados-da-otimização), [§4](RELATORIO_TECNICO.md#4-integração-com-llms), [§9](RELATORIO_TECNICO.md#9-desafios-enfrentados-e-soluções), [§7](RELATORIO_TECNICO.md#7-implementação-em-nuvem-bônus-google-cloud-run--terraform) |
+| Vídeo de demonstração (até 15 min) | link na capa do [PDF de entrega](entrega/TechChallenge_Fase2_Entrega.pdf) | — |
+
 ## Arquitetura
 
 ```mermaid
