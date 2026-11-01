@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "entrega" / "TechChallenge_Fase2_Entrega.html"
 
 REPO_URL = "https://github.com/WesleySardi/TechChallenge_Fase2_POSTECH"   # ajustar se o nome for outro
-VIDEO_URL = None                                                          # preencher após o upload
+VIDEO_URL = "https://youtu.be/-U3Yjtmh3dY"
 
 CSS = """
 @page { size: A4; margin: 18mm 16mm; }

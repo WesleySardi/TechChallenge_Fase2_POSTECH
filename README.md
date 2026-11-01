@@ -2,6 +2,8 @@
 
 **Autor:** Wesley Sardi (entrega individual)
 
+**Vídeo de demonstração:** [https://youtu.be/-U3Yjtmh3dY](https://youtu.be/-U3Yjtmh3dY)
+
 Otimização dos modelos de diagnóstico de câncer de mama da [Fase 1](https://github.com/WesleySardi/TechChallenge_Fase1_POSTECH)
 com **algoritmos genéticos** e interpretação dos resultados com **LLMs** (Projeto 1 do Tech Challenge):
 
@@ -108,7 +110,7 @@ os de relatório abrem a seção correspondente do [Relatório Técnico](RELATOR
 | Scripts ou notebooks de demonstração | [`notebooks/demo_fase2.ipynb`](notebooks/demo_fase2.ipynb), [`main_ga.py`](main_ga.py), [`main_llm.py`](main_llm.py) | — |
 | Arquivos de configuração para implantação | [`Dockerfile`](Dockerfile), [`docker-compose.yml`](docker-compose.yml), [`deploy/`](deploy/), [`infra/terraform/`](infra/terraform/) | — |
 | Relatório técnico (GA, LLM e prompts, comparativo, desafios, arquitetura de nuvem) | [`RELATORIO_TECNICO.md`](RELATORIO_TECNICO.md), [`entrega/TechChallenge_Fase2_Entrega.pdf`](entrega/TechChallenge_Fase2_Entrega.pdf) | [§2](RELATORIO_TECNICO.md#2-algoritmo-genético), [§3](RELATORIO_TECNICO.md#3-resultados-da-otimização), [§4](RELATORIO_TECNICO.md#4-integração-com-llms), [§9](RELATORIO_TECNICO.md#9-desafios-enfrentados-e-soluções), [§7](RELATORIO_TECNICO.md#7-implementação-em-nuvem-bônus-google-cloud-run--terraform) |
-| Vídeo de demonstração (até 15 min) | link na capa do [PDF de entrega](entrega/TechChallenge_Fase2_Entrega.pdf) | — |
+| Vídeo de demonstração (até 15 min) | [https://youtu.be/-U3Yjtmh3dY](https://youtu.be/-U3Yjtmh3dY) (também na capa do [PDF de entrega](entrega/TechChallenge_Fase2_Entrega.pdf)) | — |
 
 ## Arquitetura
 
